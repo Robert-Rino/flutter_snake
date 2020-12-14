@@ -46,7 +46,6 @@ class GameRoute extends StatelessWidget {
 }
 
 /// This is Snake Game application widget.
-// class Game extends StatelessWidget {
 class Game extends StatefulWidget {
   // static const _title = 'Game Route';
   // const Game({Key key}) : super(key: key);
@@ -60,14 +59,19 @@ class Game extends StatefulWidget {
 class _GameState extends State<Game> {
   final gridCount = 500;
   var gridColor = Colors.grey;
+  var gridColors = new List<Color>.generate(500, (index) => Colors.grey);
+  var targetPosition = 21;
+
   Timer _everySecond;
 
   @override
   Widget initState() {
     super.initState();
 
-    gridColor = gridColor == Colors.grey ? Colors.green : Colors.grey;
-    _everySecond = Timer.periodic(Duration(seconds: 1), (Timer t) {
+    gridColor = Colors.grey;
+    // var gridColors = new List<Color>.generate(this.gridCount, (index) => Colors.grey);
+
+    _everySecond = Timer.periodic(Duration(milliseconds: 500), (Timer t) {
       setState(() {
         _onTimerTick();
       });
@@ -76,8 +80,29 @@ class _GameState extends State<Game> {
 
   void _onTimerTick() {
     setState(() {
-      gridColor = gridColor == Colors.grey ? Colors.green : Colors.grey;
+      if (targetPosition == 21) {
+        gridColors[21] = Colors.grey;
+        gridColors[22] = Colors.green;
+        targetPosition = 22;
+      } else {
+        gridColors[22] = Colors.grey;
+        gridColors[21] = Colors.green;
+        targetPosition = 21;
+      }
+      // updatePosition();
     });
+  }
+
+  void updatePosition() {
+    if (targetPosition == 21) {
+      gridColors[21] = Colors.grey;
+      gridColors[22] = Colors.green;
+      targetPosition = 22;
+    } else {
+      gridColors[22] = Colors.grey;
+      gridColors[21] = Colors.green;
+      targetPosition = 21;
+    }
   }
 
   @override
@@ -95,7 +120,8 @@ class _GameState extends State<Game> {
               crossAxisSpacing: 2.0,
               childAspectRatio: 1.0,
               children: List.generate(gridCount, (index) {
-                return Container(height: 1, width: 1, color: gridColor);
+                return Container(
+                    height: 1, width: 1, color: this.gridColors[index]);
               }))
         ])));
   }
